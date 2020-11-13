@@ -134,7 +134,7 @@ class APIProvider:
 #            return
 #        self.config = APIProvider.api_providers[self.index]
         
-        with open('.agents','rt') as file:
+        with open('agents','rt') as file:
             readen = file.read()
             heads = readen.split('\n')
             
@@ -215,7 +215,7 @@ def readisdc(cc):
 
 def get_version():
     try:
-        return open(".version","r").read().strip()
+        return open("version","r").read().strip()
     except:
         return '1.0'
 
@@ -351,7 +351,7 @@ def update():
         do_zip_update()
 def check_for_updates():
     mesgdcrt.SectionMessage("Checking for updates")
-    fver = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/.version").text.strip()
+    fver = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/version").text.strip()
     if fver != __VERSION__:
         mesgdcrt.WarningMessage("An update is available")
         mesgdcrt.GeneralMessage("Starting update...")
