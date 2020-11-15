@@ -253,8 +253,7 @@ def defualtNum():
     return list1
 def bann_text():
     clr()
-    logo = 
-"""
+    logo = """
 
           )     *           (                  (     
     (   ( /(   (  `      (   )\ )  *   )        )\ )  
