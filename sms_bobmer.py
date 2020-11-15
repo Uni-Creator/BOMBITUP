@@ -354,7 +354,7 @@ def check_intr():
 #        check_for_updates()
     else:
         mesgdcrt.FailureMessage("Poor internet connection detected")
-#        exit()
+        exit()
 
 def pretty_print(cc,target,success,failed,mode,delay):
     mesgdcrt.SectionMessage("Gearing up the Bomber - Please be patient")
@@ -450,7 +450,7 @@ def selectnode(mode):
         clr()
         bann_text()
         check_intr()
-#        check_for_updates()
+        check_for_updates()
         
         while True:
             clr()
