@@ -1,4 +1,4 @@
-#----------------------- Importing all stufs
+#----------------------- Importing all required modules
 from time import time, sleep
 #from datetime import datetime as dt
 import os
