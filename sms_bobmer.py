@@ -350,9 +350,16 @@ def update():
     else:
         do_zip_update()
 def check_for_updates():
+    with open('sms_bobmer.py') as file:
+        cont = file.read().strip()
+    bobmer = get('https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/sms_bobmer.py').text.strip()
     mesgdcrt.SectionMessage("Checking for updates")
     fver = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/version").text.strip()
     if fver != __VERSION__:
+        mesgdcrt.WarningMessage("An update is available")
+        mesgdcrt.GeneralMessage("Starting update...")
+        update()
+    elif cont != bobmer:
         mesgdcrt.WarningMessage("An update is available")
         mesgdcrt.GeneralMessage("Starting update...")
         update()
