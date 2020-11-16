@@ -80,7 +80,7 @@ def get_proxy():
     if 'limit' in curl:
         print('Gimmeproxy.com limit is leached. Now using pubproxy.com')
         
-        curl = get('http://pubproxy.com/api/proxy?format=txt&type=http&country=TG,UA,VE,AD,AF,US,CA&not_country=IN,MX&port=3128&https=true&user-agent=true&cookies=true&referer=true&last_check=1').text
+        curl = get('http://pubproxy.com/api/proxy?format=txt&type=http&country=TG,UA,VE,AD,AF,US,CA&not_country=IN,MX&speed=1&port=3128&https=true&user-agent=true&cookies=true&referer=true&last_check=1').text
         
         if 'no proxy' in curl.lower():
             print('Can\'t fetch proxies')
@@ -322,9 +322,9 @@ def update():
 def check_for_updates():
     with open('sms_bobmer.py') as file:
         cont = file.read()
-    bobmer = get('https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/sms_bobmer.py').text
+    bobmer = get('https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/main/sms_bobmer.py').text
     mesgdcrt.SectionMessage("Checking for updates")
-    fver = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/version").text.strip()
+    fver = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/main/version").text.strip()
     if fver != __VERSION__:
         mesgdcrt.WarningMessage("An update is available")
         mesgdcrt.GeneralMessage("Starting update...")
