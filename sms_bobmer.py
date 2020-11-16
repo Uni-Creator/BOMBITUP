@@ -181,7 +181,8 @@ class APIProvider:
             self.lock.release()
             return response
 
-
+def returnNotMatches(a,b):
+    return [[x for x in a if x not in b],[x for x in b if x not in a]]
 
 def readisdc(cc):
     with open("isdcodes.json") as file:
@@ -219,7 +220,7 @@ def bann_text():
   ((_)_   ((_) (_()((_)((_)_ (_)) (_(_()) _ ((_)(_))   
   | _ ) / _ \ |  \/  | | _ )|_ _||_   _|| | | || _ \  
   | _ \| (_) || |\/| | | _ \ | |   | |  | |_| ||  _/  
-  |___/ \___/ |_|  |_| |___/|___|  |_|   \___/ |_|    
+  |___/ \___/ |_|  |_| |___/|___|  |_|   \___/ |_|   
 
 """
     
@@ -294,28 +295,32 @@ def check_for_updates():
     if version != __VERSION__:
         mesgdcrt.WarningMessage("An update is available")
         mesgdcrt.GeneralMessage("Starting update...")
+        print(returnNotMatches(version,__VERSION__))
         update()
-    elif sms != bobmer:
-        mesgdcrt.WarningMessage("An update is available sms_bobmer.py is not up-to-date !")
-        mesgdcrt.GeneralMessage("Starting update...")
-        update()
+#    elif sms != bobmer:
+#        mesgdcrt.WarningMessage("An update is available")
+#        mesgdcrt.GeneralMessage("Starting update...")
+#        print(returnNotMatches(sms,bobmer))
+#        update()
     elif apida != apidata:
         mesgdcrt.WarningMessage("An update is available apidata.json is not up-to-date !")
         mesgdcrt.GeneralMessage("Starting update...")
+        print(returnNotMatches(apida,apidata))
         update()
     elif isdoc != isdcodes:
         mesgdcrt.WarningMessage("An update is available isdcoeds.json is not up-to-date !")
         mesgdcrt.GeneralMessage("Starting update...")
+        print(returnNotMatches(isdoc,isdcodes))
         update()
     elif agen != agents:
         mesgdcrt.WarningMessage("An update is available apidata.json is not up-to-date !")
         mesgdcrt.GeneralMessage("Starting update...")
+        print(returnNotMatches(agen,agents))
         update()
     else:
         mesgdcrt.SuccessMessage("BOMBITUP is up-to-date")
         mesgdcrt.GeneralMessage("Starting BOMBITUP")
-        
-        
+    sleep(2)
 def check_intr():
     if connected():
         mesgdcrt.SuccessMessage('Connected to internet !')
