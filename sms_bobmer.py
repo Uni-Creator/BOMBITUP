@@ -76,27 +76,13 @@ class MessageDecorator(object):
 def get_proxy():
     print('Fetching proxies from server...')
 #    proxies = {'http':'http://157.230.247.57:3128','https':'https://157.230.247.57:3128'}
-    curl = get('https://gimmeproxy.com/api/getProxy?curl=true&protocol=http&supportsHttps=true').text
-    if 'limit' in curl:
-        print('Gimmeproxy.com limit is leached. Now using pubproxy.com')
-        
-        curl = get('http://pubproxy.com/api/proxy?format=txt&type=http&country=TG,UA,VE,AD,AF,US,CA&not_country=IN,MX&speed=1&port=3128&https=true&user-agent=true&cookies=true&referer=true&last_check=1').text
-        
-        if 'no proxy' in curl.lower():
-            print('Can\'t fetch proxies')
-            return None
-        print(f'Using proxies: http://{curl} https://{curl}')
-        return {"http":f'http://{curl}','https':f'https://{curl}'}
-    
-    print(f"Using proxies: {curl} {curl.replace('http','https')}")
-    return {"http":curl,'https':curl.replace('http','https')}
-#for i in range(0,10):
-#get_proxy()
-#sleep(10)
-#google = get('https://www.google.com',proxies=None).text
-#print()
-#print(google)
-#sys.exit()
+    curl = get('http://pubproxy.com/api/proxy?format=txt&type=http&country=TG,UA,VE,AD,AF,US,CA&not_country=IN,MX&speed=1&port=3128&https=true&user-agent=true&cookies=true&referer=true&last_check=1').text.replace('\r','')
+    if 'no proxy' in curl.lower():
+        print('Can\'t fetch proxies')
+        return None
+    print(f'Using proxies: http://{curl} https://{curl}')
+    return {"http":f'http://{curl}','https':f'https://{curl}'}
+
 class APIProvider:
 
     api_providers=[]
@@ -150,9 +136,6 @@ class APIProvider:
             heads["user-agent"] = perma_headers
             
         self.format()
-#        print('\nIn select_api\n')
-#        print(self.config)
-#        sleep(2)
 
     def remove(self):
         try:
@@ -169,13 +152,7 @@ class APIProvider:
         del self.config['name']
         self.config['timeout']=30
         self.config['proxies'] = self.proxies
-#        del self.config['headers']
-#        del self.config['method']
         response=reqt(**self.config)
-#        print('\nIn request\n')
-#        print(self.config)
-#        print(response)
-#        return identifier in response.text.lower()
         response = int(str(response).replace('>','').replace('<Response','').replace(' ','').replace('[','').replace(']',''))
         print(response)
 #        sleep(1)
@@ -231,26 +208,6 @@ def clr():
         os.system("cls")
     else:
         os.system("clear")
-def defualtNum():
-    list1 = []
-    with open(file,'rt') as victims_lis:
-
-        victim_num_lis = victims_lis.read()
-
-        vic_lis = victim_num_lis.split('/')
-
-        for vic_and_num in vic_lis:
-
-            vic_and_num_lis = vic_and_num.split('\n')
-
-            for name in vic_and_num_lis:
-
-                if (name == 'Teachers') or (name == 'Students') or (name == ''):
-                    pass
-                else:
-                    name = name.replace(' ', '')
-                    list1.append(name.split(':')[1])
-    return list1
 def bann_text():
     clr()
     logo = """
@@ -321,16 +278,37 @@ def update():
         do_zip_update()
 def check_for_updates():
     with open('sms_bobmer.py') as file:
-        cont = file.read()
-    bobmer = get('https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/sms_bobmer.py').text
+        sms = file.read()
+    with open('apidata.json') as file:
+        apida = file.read()
+    with open('isdcodes.json') as file:
+        isdoc = file.read()
+    with open('agents') as file:
+        agen = file.read()
     mesgdcrt.SectionMessage("Checking for updates")
-    fver = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/version").text.strip()
+    bobmer = get('https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/sms_bobmer.py').text.repalce('\r','')
+    version = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/version").text.strip().repalce('\r','')
+    isdcodes = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/isdcodes.json").text.repalce('\r','')
+    agents = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/agents").text.repalce('\r','')
+    apidata = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/apidata.json").text.repalce('\r','')
     if fver != __VERSION__:
         mesgdcrt.WarningMessage("An update is available")
         mesgdcrt.GeneralMessage("Starting update...")
         update()
-    elif cont != bobmer:
-        mesgdcrt.WarningMessage("An update is available")
+    elif sms != bobmer:
+        mesgdcrt.WarningMessage("An update is available sms_bobmer.py is not up-to-date !")
+        mesgdcrt.GeneralMessage("Starting update...")
+        update()
+    elif apida != apidata:
+        mesgdcrt.WarningMessage("An update is available apidata.json is not up-to-date !")
+        mesgdcrt.GeneralMessage("Starting update...")
+        update()
+    elif isdoc != isdcodes:
+        mesgdcrt.WarningMessage("An update is available isdcoeds.json is not up-to-date !")
+        mesgdcrt.GeneralMessage("Starting update...")
+        update()
+    elif agen != agents:
+        mesgdcrt.WarningMessage("An update is available apidata.json is not up-to-date !")
         mesgdcrt.GeneralMessage("Starting update...")
         update()
     else:
@@ -350,7 +328,7 @@ def check_intr():
             country_codes = readisdc('91')
         except FileNotFoundError:
             update()
-#        check_for_updates()
+        check_for_updates()
     else:
         mesgdcrt.FailureMessage("Poor internet connection detected")
         exit()
@@ -390,46 +368,13 @@ def workernode(mode,cc,target,count,delay,proxies):
 
     success,failed=0,0
     while success < count:
-        
-#        try:
-#        print('\nHey hit1:\n')
         result = api.hit()
-        
-#        print('\nHey hit2:\n')
-#        print(api.hit())
-#        print(f'\n{api.hit()}')
-#        print('\nHey request:\n')
-#        print(api.request())
 
         sleep(2)
         if result:
-#                print(result+'s')
             success+=1
         elif not result:
-#                print(result+'f')
             failed+=1
-#        except:
-#            failed+=1
-
-#-------------------------------------old method-------------------------------------
-#        with ThreadPoolExecutor(max_workers=max_threads) as executor:
-#            jobs = []
-#            for i in range(count-success):
-#                jobs.append(executor.submit(api.hit))
-#
-#            for job in as_completed(jobs):
-#                result = job.result()
-#                if result==None:
-#                    mesgdcrt.FailureMessage("Bombing limit for your target has been reached")
-#                    mesgdcrt.GeneralMessage("Try Again Later !!")
-#                    input(mesgdcrt.CommandMessage("Press [ENTER] to exit"))                   
-#                    bann_text()
-#                    sys.exit()
-#                elif result:
-#                    success+=1
-#                else:
-#                    failed+=1
-#-------------------------------------------------------------------------------------
         clr()
         pretty_print(cc,target,success,failed,mode,delay)
         sleep(delay-3 if delay>0 else delay)
@@ -449,8 +394,6 @@ def selectnode(mode):
         clr()
         bann_text()
         check_intr()
-        check_for_updates()
-        
         while True:
             clr()
             bann_text()
@@ -479,45 +422,26 @@ def selectnode(mode):
         while True:
             clr()
             bann_text()
-            confirm = input(mesgdcrt.CommandMessage('Use Default (d) or a new number (n): '))
-            confirm = confirm.lower()
+            victimNumber = input(mesgdcrt.CommandMessage(f"Enter victim's Number/s seperated by comma(,) +{cc}: "))
+            victimNumber = victimNumber.replace(' ','')
 
-            if confirm == 'd':
-                victimNumber = defualtNum()
-                break
-
-            elif confirm == 'n':
-
-                while True:
-                    clr()
-                    bann_text()
-                    victimNumber = input(mesgdcrt.CommandMessage(f"Enter victim's Number/s seperated by comma(,) +{cc}: "))
-                    victimNumber = victimNumber.replace(' ','')
-
-                    if victimNumber == '' or len(victimNumber) < 6:
-                        mesgdcrt.FailureMessage('Invalid number !')
-                        sleep(1)
-
-                    elif  not (',' in victimNumber) and (len(victimNumber) > 12):
-                        mesgdcrt.FailureMessage('Invalid number !')
-                        sleep(1)
-                        
-                    elif cc == '91' and len(victimNumber) != 10 and  not (',' in victimNumber):
-                        mesgdcrt.FailureMessage('Invalid number !')
-                        sleep(1)
-                        
-                    else:
-                        break
-                break
-
-            else:
-                mesgdcrt.FailureMessage(' Invalid option !')
+            if victimNumber == '' or len(victimNumber) < 6:
+                mesgdcrt.FailureMessage('Invalid number !')
                 sleep(1)
 
+            elif  not (',' in victimNumber) and (len(victimNumber) > 12):
+                mesgdcrt.FailureMessage('Invalid number !')
+                sleep(1)
+
+            elif cc == '91' and len(victimNumber) != 10 and  not (',' in victimNumber):
+                mesgdcrt.FailureMessage('Invalid number !')
+                sleep(1)
+
+            else:
+                break
+
         victimsLis = []
-        if victimNumber == defualtNum():
-            victimsLis = defualtNum()
-        elif len(victimNumber) in range(6,13) and victimNumber.isnumeric():
+        if len(victimNumber) in range(6,13) and victimNumber.isnumeric():
             victimsLis.append(victimNumber)
         else:
             testLis1 = victimNumber.split(',')
@@ -544,11 +468,8 @@ def selectnode(mode):
                     testLis2.append(num)
                     mesgdcrt.SuccessMessage('Number removed else !\n')
                     sleep(2)
-
-#                    elif num in testLis12:
-#                        print(f'[*]Duplicate number is present at index {victimsLis.index(num) + 1}')
-#                        testLis1.remove(num)
-#                        print('[*]Number removed !\n')
+            mesgdcrt.SuccessMessage('Removing Duplicates if any')
+            testLis1 = list(set(testLis1))
             for a in testLis1:
                 if not (a in testLis2):
                     victimsLis.append(a)
@@ -597,9 +518,7 @@ def selectnode(mode):
             else:
                 mesgdcrt.FailureMessage('Invalid value !')
                 sleep(2)
-                
-#        if mode == 'call':
-#            while True:
+
         clr()
         bann_text()
         delay = input(mesgdcrt.CommandMessage(f'Enter the delay between {mode}\'s (min {mindelay} and max 20): '))
@@ -635,7 +554,6 @@ def selectnode(mode):
                     proxies = get_proxy()
                 else:
                     proxies = None
-#                proxies = {'http':'http://157.230.247.57:3128','https':'http://157.230.247.57:3128'}
             except:
                 proxies = None
             workernode(mode,cc,target,msgCount,delay,proxies)
@@ -643,7 +561,7 @@ def selectnode(mode):
         
     except KeyboardInterrupt :
         print('\n')
-        mesgdcrt.WarningMessage("Received INTR call - Exiting...")
+        mesgdcrt.WarningMessage("\nReceived INTR call - Exiting...")
         sys.exit()
         
 
@@ -713,6 +631,6 @@ if __name__ == "__main__":
         except KeyboardInterrupt : 
             print('\n')
             mesgdcrt.WarningMessage("Received INTR call - Exiting...")
-#            sys.exit()
+           sys.exit()
     sys.exit()
     
