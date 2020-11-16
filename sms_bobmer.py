@@ -291,9 +291,6 @@ def check_for_updates():
     isdcodes = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/isdcodes.json").text.replace('\r','')
     agents = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/agents").text.replace('\r','')
     apidata = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/apidata.json").text.replace('\r','')
-    
-    bobmer = bobmer.replace('âœ”','✔').replace('âœ˜','✘').replace('â†’','→')
-    
     if version != __VERSION__:
         mesgdcrt.WarningMessage("An update is available")
         mesgdcrt.GeneralMessage("Starting update...")
