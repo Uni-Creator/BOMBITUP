@@ -154,7 +154,7 @@ class APIProvider:
         self.config['proxies'] = self.proxies
         response=reqt(**self.config)
         response = int(str(response).replace('>','').replace('<Response','').replace(' ','').replace('[','').replace(']',''))
-        print(response)
+#         print(response)
 #        sleep(1)
         if response in range(200,300):
             return True
