@@ -566,7 +566,7 @@ def selectnode(mode):
         
     except KeyboardInterrupt :
         print('\n')
-        mesgdcrt.WarningMessage("\nReceived INTR call - Exiting...")
+        mesgdcrt.WarningMessage("Received INTR call - Exiting...")
         sys.exit()
         
 
