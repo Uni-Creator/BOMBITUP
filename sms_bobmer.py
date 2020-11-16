@@ -76,7 +76,7 @@ class MessageDecorator(object):
 def get_proxy():
     print('Fetching proxies from server...')
 #    proxies = {'http':'http://157.230.247.57:3128','https':'https://157.230.247.57:3128'}
-    curl = get('http://pubproxy.com/api/proxy?format=txt&type=http&country=TG,UA,VE,AD,AF,US,CA&not_country=IN,MX&speed=1&port=3128&https=true&user-agent=true&cookies=true&referer=true&last_check=1').text.replace('\r','')
+    curl = get('http://pubproxy.com/api/proxy?format=txt&type=http&country=TG,UA,VE,AD,AF,US,CA&not_country=IN,MX&port=3128&https=true&user-agent=true&cookies=true&referer=true&last_check=1').text.replace('\r','')
     if 'no proxy' in curl.lower():
         print('Can\'t fetch proxies')
         return None
