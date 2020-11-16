@@ -286,12 +286,12 @@ def check_for_updates():
     with open('agents') as file:
         agen = file.read()
     mesgdcrt.SectionMessage("Checking for updates")
-    bobmer = get('https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/sms_bobmer.py').text.repalce('\r','')
-    version = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/version").text.strip().repalce('\r','')
-    isdcodes = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/isdcodes.json").text.repalce('\r','')
-    agents = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/agents").text.repalce('\r','')
-    apidata = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/apidata.json").text.repalce('\r','')
-    if fver != __VERSION__:
+    bobmer = get('https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/sms_bobmer.py').text.replace('\r','')
+    version = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/version").text.strip().replace('\r','')
+    isdcodes = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/isdcodes.json").text.replace('\r','')
+    agents = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/agents").text.replace('\r','')
+    apidata = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/apidata.json").text.replace('\r','')
+    if version != __VERSION__:
         mesgdcrt.WarningMessage("An update is available")
         mesgdcrt.GeneralMessage("Starting update...")
         update()
@@ -631,6 +631,6 @@ if __name__ == "__main__":
         except KeyboardInterrupt : 
             print('\n')
             mesgdcrt.WarningMessage("Received INTR call - Exiting...")
-           sys.exit()
+            sys.exit()
     sys.exit()
     
