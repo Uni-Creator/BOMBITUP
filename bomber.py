@@ -278,7 +278,7 @@ def update():
     else:
         do_zip_update()
 def check_for_updates():
-    with open('sms_bobmer.py') as file:
+    with open('bomber.py') as file:
         sms = file.read()
     with open('apidata.json') as file:
         apida = file.read()
@@ -287,7 +287,7 @@ def check_for_updates():
     with open('agents') as file:
         agen = file.read()
     mesgdcrt.SectionMessage("Checking for updates")
-    bobmer = get('https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/sms_bobmer.py').text.replace('\r','')
+    bobmer = get('https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/bomber.py').text.replace('\r','')
     version = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/version").text.strip().replace('\r','')
     isdcodes = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/isdcodes.json").text.replace('\r','')
     agents = get("https://raw.githubusercontent.com/Uni-Creator/BOMBITUP/master/agents").text.replace('\r','')
@@ -297,11 +297,11 @@ def check_for_updates():
         mesgdcrt.GeneralMessage("Starting update...")
         print(returnNotMatches(version,__VERSION__))
         update()
-#    elif sms != bobmer:
-#        mesgdcrt.WarningMessage("An update is available")
-#        mesgdcrt.GeneralMessage("Starting update...")
-#        print(returnNotMatches(sms,bobmer))
-#        update()
+    elif sms != bobmer:
+        mesgdcrt.WarningMessage("An update is available")
+        mesgdcrt.GeneralMessage("Starting update...")
+        print(returnNotMatches(sms,bobmer))
+        update()
     elif apida != apidata:
         mesgdcrt.WarningMessage("An update is available apidata.json is not up-to-date !")
         mesgdcrt.GeneralMessage("Starting update...")
