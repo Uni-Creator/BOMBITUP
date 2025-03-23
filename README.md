@@ -1,4 +1,3 @@
-```markdown
 # BOMBITUP 🚀  
 
 ![GitHub Repo Stars](https://img.shields.io/github/stars/Uni-Creator/BOMBITUP?style=social)  
