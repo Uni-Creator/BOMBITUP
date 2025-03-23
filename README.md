@@ -1,8 +1,6 @@
-```markdown
 # BOMBITUP 🚀  
 
-![GitHub Repo Stars](https://img.shields.io/github/stars/Uni-Creator/BOMBITUP?style=social)  
-![GitHub Forks](https://img.shields.io/github/forks/Uni-Creator/BOMBITUP?style=social)  
+![GitHub Repo Stars](https://img.shields.io/github/stars/Uni-Creator/BOMBITUP?style=social)  ![GitHub Forks](https://img.shields.io/github/forks/Uni-Creator/BOMBITUP?style=social)  
 
 A powerful and open-source SMS & Call Bomber for educational and testing purposes only! 📱💥  
 
@@ -73,6 +71,11 @@ python bomber.py
 This project is licensed under the **MIT License**.  
 
 ---
+
+## 🌍 Connect with Me  
+- **GitHub:** [Uni-Creator](https://github.com/Uni-Creator)  
+- **LinkedIn:** [Your LinkedIn Profile](#)  
+- **Twitter:** [Your Twitter Profile](#)  
 
 🚀 **Happy Ethical Testing!**  
 ```
